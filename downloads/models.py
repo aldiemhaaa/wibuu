@@ -56,6 +56,12 @@ class Series(models.Model):
     def __str__(self):
         return self.series
 
+class Layanan(models.Model):
+    layanan = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.layanan
+
 
 class Anime(models.Model):
     title = models.CharField(max_length=128)
@@ -81,3 +87,30 @@ class AnimeGenre(models.Model):
 
     def __str__(self):
         return str(self.animeId)
+
+
+class EpisodeAnime(models.Model):
+    animeId = models.ForeignKey(Anime,on_delete=models.CASCADE)
+    episode = models.CharField(max_length=200)
+
+    def __str__(self):
+        return  '(%s)' % self.episode + str(self.animeId)
+
+class ResolusiDownloads(models.Model):
+    animeId = models.ForeignKey(Anime,on_delete=models.CASCADE)
+    episodeAnimeId = models.ForeignKey(EpisodeAnime,on_delete=models.CASCADE)
+    resolusi = models.CharField(max_length=10)
+    
+    def __str__(self):
+        return self.resolusi
+
+class LayananDownload(models.Model):
+    animeId = models.ForeignKey(Anime,on_delete=models.CASCADE)
+    episodeAnimeId = models.ForeignKey(EpisodeAnime,on_delete=models.CASCADE)
+    resolusiDownloadId = models.ForeignKey(ResolusiDownloads,on_delete=models.CASCADE)
+    layananId = models.ForeignKey(Layanan,on_delete=models.CASCADE)
+    link = models.CharField(max_length=250)
+
+    def __str__(self):
+        return '(%s)' % self.layananId + ' - ' + '(%s)'% self.animeId + ' - ' + self.link 
+
